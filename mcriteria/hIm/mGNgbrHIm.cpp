@@ -286,7 +286,7 @@ int main(int argc, char ** argv)
     {
     //	beta = i*0.001 + 0.002;
     //	cout << beta << endl;
-   // 	svd::model(dim,alpha,beta);
+    	svd::model(dim,alpha,beta);
     	
     }
     end = time(NULL);

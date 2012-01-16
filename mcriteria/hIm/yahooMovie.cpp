@@ -41,7 +41,7 @@ void loadRating(char * fileName,  map<int,int> rateMatrixLocal[USER_NUM+1][CRI_N
             else if(1 == i) userId = atoi(pch);
             else if(i > 1) {
                 rateMatrixLocal[userId][i-1][itemId] = atoi(pch);
-                cout<<strTemp<<"#####################userId:"<<userId<<" itemId:"<<itemId<<" rate:"<<atoi(pch)<<endl;
+//                cout<<strTemp<<"#####################userId:"<<userId<<" itemId:"<<itemId<<" rate:"<<atoi(pch)<<endl;
             }
             else if(i > 1+CRI_NUM) break;
             ++i;
