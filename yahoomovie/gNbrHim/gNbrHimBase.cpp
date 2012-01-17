@@ -237,4 +237,3 @@ float predictRate(int user, int item, int cri)
     return ret;
 }
 #endif // GNBRHIM_BASE_CPP_ 
-
