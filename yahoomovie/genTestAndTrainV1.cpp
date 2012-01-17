@@ -17,10 +17,10 @@
 #include <set>
 #include <math.h>
 #include <stdlib.h>
-#define  SOURCE "./clean-yahoo-user-ratings.txt"
+#define  SOURCE "../yahooMovie/yahooMovie.data"
 #define  SEPARATOR " "
-#define USER_NUM 409399 
-#define ITEM_NUM 5628
+#define USER_NUM 4652
+#define ITEM_NUM 4244
 using namespace std;
 float get_rand();
 //Rating sequence: MovieId, UserId, StoryRating, ActingRating, DirectionRating, VisualRating, OverallRating
@@ -89,25 +89,25 @@ int main()
     cout<<"read file successfully!"<<endl;
     
     //split the ratings
-    ofstream training("training.txt");
-    ofstream test("test.txt");
+    ofstream training("./tmpData/training.txt");
+    ofstream test("./tmpData/test.txt");
     srand((unsigned)time(0));
     for(int i = 1; i < USER_NUM+1; ++i){
     	int vSize = rateMatrix[i].size();
 		for(int j=0; j < vSize; ++j) {
 		    float randTemp = get_rand();
 			if(randTemp < 0.3) { // in test set
-				test <<i<<" "<<rateMatrix[i][j].item<<" "<<rateMatrix[i][j].story<<" ";
+				test <<rateMatrix[i][j].item<<" "<<i<<" "<<rateMatrix[i][j].story<<" ";
 				test <<rateMatrix[i][j].acting<<" "<<rateMatrix[i][j].direction<<" ";
 				test <<rateMatrix[i][j].visual<<" "<<rateMatrix[i][j].overall<<endl;
 			}
 			else {
-				training <<i<<" "<<rateMatrix[i][j].item<<" "<<rateMatrix[i][j].story<<" ";
+				training <<rateMatrix[i][j].item<<" "<<i<<" "<<rateMatrix[i][j].story<<" ";
 				training <<rateMatrix[i][j].acting<<" "<<rateMatrix[i][j].direction<<" ";
 				training <<rateMatrix[i][j].visual<<" "<<rateMatrix[i][j].overall<<endl;
 			}
 		}
-		if(i % 30000 == 0)cout << "user "<<i<< " deal successfully!"<<endl;
+		if(i % 3000 == 0)cout << "user "<<i<< " deal successfully!"<<endl;
     }
     test.close();
     training.close();

@@ -11,8 +11,8 @@
  * This file gives some define of the yahoo movie dataset
  *
  */
-#define USER_NUM 409399
-#define ITEM_NUM 5628
+#define USER_NUM 4652
+#define ITEM_NUM 4244
 #define CRI_NUM 5
 #define K_NUM 1
 #define TRAINING_SET "../tmpData/training.txt"

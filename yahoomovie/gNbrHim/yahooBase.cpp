@@ -38,6 +38,7 @@ void loadRating(const char * fileName, vector<rateNode> rateMatrixLocal[USER_NUM
     int itemId = 0, userId = 0, story = 0, acting = 0, direction = 0, visual = 0, overall = 0;
     while(from.getline(rateStr,256)){
         string strTemp(rateStr);
+        /*
         int pos = strTemp.find(":");
         if(-1 != pos) {
             itemId = atoi(strTemp.substr(0,pos).c_str());
@@ -50,7 +51,7 @@ void loadRating(const char * fileName, vector<rateNode> rateMatrixLocal[USER_NUM
                 cout<<"read file "<<fileNum<<" sucessfully!"<<endl;
             }
             continue;
-        }
+        }*/
         if(strTemp.length() < 3)continue;
         int i = 0;
         pch = strtok (rateStr,separator);
