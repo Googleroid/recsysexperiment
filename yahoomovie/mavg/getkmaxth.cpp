@@ -19,7 +19,8 @@
  * (2)for every item i，use the minimal heap to get k-max similarity value
  * (3)store the k-max similarity value to file
  *    
- *  
+ * 
+ * usage: ./getSim simFile
  */
 #include "../commonHeader.h"
 
@@ -27,7 +28,6 @@
 #define RATE_SP " "  //rate Separator
 #define USER_NUM 943 //10K:943 1M:6040
 #define ITEM_NUM 1682 //10K:1682 1M:3900
-#define SIM_FILE "min.sim"
 
 /*
   #define TRAINING_SET "../dataset/netflix/data_without_prob.txt"
@@ -45,15 +45,15 @@ namespace knn{
     float getKmax(vector<float>& array, int K);
     bool cmp(double a, double b);
     
-    void getKMaxSim(int K, const char* source="movielens")
+    void getKMaxSim(int K, char* simFile, const char* source="movielens")
     {
         cout << "begin initialization: " << endl;
         char rateStr[256];
         char* pch;    
         vector<float> simArray;
         int itemNum = 0;
-        string dst = string(SIM_FILE) + "_kmax";
-        std::ifstream from(SIM_FILE);
+        string dst = string(simFile) + "_kmax";
+        std::ifstream from(simFile);
         ofstream to(dst.c_str());
         if (!from.is_open()) {
             cout << "can't open  operation failed!\n";
@@ -137,11 +137,18 @@ int main(int argc, char ** argv)
     time_t start,end;
     struct tm * timeStartInfo;
     struct tm * timeEndInfo;
+    char* simFile;
+    if (argc > 1) {
+        simFile = argv[1];
+    }
+    else {
+        simFile = "avg.sim";
+    }
     double duration; 
     start = time(NULL);
     timeStartInfo = localtime(&start);
     string timeStartStr = asctime(timeStartInfo);
-    knn::getKMaxSim(100);
+    knn::getKMaxSim(100, simFile);
     end = time(NULL);
     duration = (end-start);
     timeEndInfo = localtime(&end);

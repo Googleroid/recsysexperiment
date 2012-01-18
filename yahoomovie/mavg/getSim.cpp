@@ -30,7 +30,6 @@
 #define RATE_SP " "  //rate Separator
 #define USER_NUM 4652 //10K:943 1M:6040
 #define ITEM_NUM 4244 //10K:1682 1M:3900
-#define CRI_LABEL 4
 /*
   #define TRAINING_SET "../dataset/netflix/data_without_prob.txt"
   #define RATE_SP ","  //rate Separator
@@ -45,14 +44,14 @@ namespace knn{
     
     //function declaration    
     double getSim(int item1,int item2);
-    void loadRating(char * filePath, map<int,short> rateMatrixLocal[],const char* separator);
-    void loadNetflixRating(char * filePath, map<int,short> rateMatrixLocal[],const char* separator);
+    void loadRating(char * filePath, map<int,short> rateMatrixLocal[],const char* separator, int cri_label);
+    void loadNetflixRating(char * filePath, map<int,short> rateMatrixLocal[],const char* separator, int cri_label);
     
-    void getSimMatrix(const char* source="movielens")
+    void getSimMatrix(int cri_label, const char* source="movielens")
     {
         cout << "begin initialization: " << endl;   
-        if("movielens" == source)loadRating(TRAINING_SET,rateMatrix,RATE_SP);  //initialization,load ratings to rateMatrix
-        else if("netflix" == source)loadNetflixRating(TRAINING_SET,rateMatrix,RATE_SP);
+        if("movielens" == source)loadRating(TRAINING_SET,rateMatrix,RATE_SP, cri_label);  //initialization,load ratings to rateMatrix
+        else if("netflix" == source)loadNetflixRating(TRAINING_SET,rateMatrix,RATE_SP, cri_label);
         int i,u,j,k;
         
         //get the mean rate of every item
@@ -91,7 +90,8 @@ namespace knn{
     /**
      * load ratings in filePath to rateMatrix
      */
-    void loadRating(char * filePath, map<int,short> rateMatrixLocal[],const char* separator)
+    void loadRating(char * filePath, map<int,short> rateMatrixLocal[],const char* separator,
+            int cri_label)
     {
         cout<<"begin load training rate:"<<endl;
         std::ifstream from (filePath);
@@ -113,7 +113,7 @@ namespace knn{
             while (pch != NULL) {
                 if(0 == i) itemId = atoi(pch);
                 else if(1 == i) userId = atoi(pch);
-                else if(CRI_LABEL+1 == i) rate = atoi(pch);
+                else if(cri_label+1 == i) rate = atoi(pch);
                 //else if(i > 2) break;
                 ++i;
                 pch = strtok (NULL,separator);
@@ -136,7 +136,7 @@ namespace knn{
      * load the ratings in filePath to rateMatrix
      * 
      */
-    void loadNetflixRating(char * filePath, map<int,short> rateMatrixLocal[],const char* separator)
+    void loadNetflixRating(char * filePath, map<int,short> rateMatrixLocal[],const char* separator, int cri_label)
     {
         cout<<"begin load training rate:"<<endl;
         char rateStr[256];
@@ -215,11 +215,18 @@ int main(int argc, char ** argv)
     time_t start,end;
     struct tm * timeStartInfo;
     struct tm * timeEndInfo;
-    double duration; 
+    double duration;
+    int cri_label;
+    if (argc > 1) {
+        cri_label = atoi(argv[1]); //the argv[1] is the cri_label, it decide to compute the similarity of which criteria
+    }
+    else {
+        cri_label = 1;
+    }
     start = time(NULL);
     timeStartInfo = localtime(&start);
     string timeStartStr = asctime(timeStartInfo);
-    knn::getSimMatrix();
+    knn::getSimMatrix(cri_label);
     end = time(NULL);
     duration = (end-start);
     timeEndInfo = localtime(&end);

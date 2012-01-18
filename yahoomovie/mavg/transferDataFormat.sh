@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#this file transfer the multi criteria data of yahoo to movielens format and then can use the 
-#movilens's knn programme to compute the RMSE
+#this file transfer the "multi criteria data of yahoo movie" to "movielens" format
+#and then can use the movilens's knn programme to compute the RMSE
 
 #steps:
 #(1)read every line 

@@ -35,8 +35,15 @@ struct rateNode
 	short overall;
 };
 
-int main()
+int main(int argc, char** argv)
 {
+    float ratio;
+    if (argc > 1) {
+        ratio = atof(argv[1]);
+    }
+    else 
+        ratio = 0.3;
+    //cout<<ratio<<endl;exit(0);
     //(1)load the data in a rateMatrix 
     //(2)random select the test rate for every
     //(3)save the rate in different files.
@@ -97,7 +104,7 @@ int main()
     	int vSize = rateMatrix[i].size();
 		for(int j=0; j < vSize; ++j) {
 		    float randTemp = get_rand();
-			if(randTemp < 0.3) { // in test set
+			if(randTemp < ratio) { // in test set
 				test <<rateMatrix[i][j].item<<" "<<i<<" "<<rateMatrix[i][j].story<<" ";
 				test <<rateMatrix[i][j].acting<<" "<<rateMatrix[i][j].direction<<" ";
 				test <<rateMatrix[i][j].visual<<" "<<rateMatrix[i][j].overall<<endl;
