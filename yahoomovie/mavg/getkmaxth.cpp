@@ -65,14 +65,17 @@ namespace knn{
             string strTemp(rateStr);
             int pos = strTemp.find(":");
             if(-1 != pos) {
+                itemJ = itemI; //store the last item
                 itemI = atoi(strTemp.substr(0,pos).c_str());
-                
+                if(0 == itemJ) {//the first line
+                    continue;
+                }
                 if(0 == itemI ) {
                     cout<<strTemp<<"#####################"<<endl;
                     exit(1);
                 }
-                float kmaxValue = getKmax(simArray,K);
-                to << itemI << '\t' << kmaxValue <<endl;
+                float kmaxValue = getKmax(simArray,K); //get the k-max of the last item
+                to << itemJ << '\t' << kmaxValue <<endl;
                 simArray.clear(); //清空vector,为获取下一个item的k-max similarity做准备    
                 ++itemNum;     
                 if(itemNum %3000 ==0) {
