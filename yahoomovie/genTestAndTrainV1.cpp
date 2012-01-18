@@ -17,6 +17,7 @@
 #include <set>
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 #define  SOURCE "../yahooMovie/yahooMovie.data"
 #define  SEPARATOR " "
 #define USER_NUM 4652
