@@ -30,7 +30,7 @@
 #define RATE_SP " "  //rate Separator
 #define USER_NUM 4652 //10K:943 1M:6040
 #define ITEM_NUM 4244 //10K:1682 1M:3900
-#define CRI_LABEL 1
+#define CRI_LABEL 4
 /*
   #define TRAINING_SET "../dataset/netflix/data_without_prob.txt"
   #define RATE_SP ","  //rate Separator
