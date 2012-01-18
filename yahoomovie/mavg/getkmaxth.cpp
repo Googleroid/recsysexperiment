@@ -16,7 +16,7 @@
  * steps:
  * (0)calculate the similarity matrix and store it to the file(getSim.cpp)
  * (1)get the similarity matrix from the file.
- * (2)for every item i£¬use the minimal heap to get k-max similarity value
+ * (2)for every item iï¼Œuse the minimal heap to get k-max similarity value
  * (3)store the k-max similarity value to file
  *    
  *  
@@ -24,7 +24,7 @@
 #include "../commonHeader.h"
 
 #define TRAINING_SET "../dataset/movielens/u1.base"
-#define RATE_SP "	"  //rate Separator
+#define RATE_SP " "  //rate Separator
 #define USER_NUM 943 //10K:943 1M:6040
 #define ITEM_NUM 1682 //10K:1682 1M:3900
 
@@ -35,10 +35,10 @@
   #define ITEM_NUM 17770 //10K:1682 1M:3900
 */
 namespace knn{
-    vector<float> mi(ITEM_NUM+1,0.0);         //store the mean rate of every item(ÓÃÀ´´æ´¢Ã¿¸öitemµÄÆ½¾ù´ò·Ö)
-    float w[ITEM_NUM+1][ITEM_NUM+1] = {0};    //item-item similarity matrix(item-itemÏàËÆ¾ØÕó)
-    map<int,short> rateMatrix[ITEM_NUM+1];    //use a map to store the sparse rate matrix(Ê¹ÓÃÒ»¸ömapÊı×é´æ´¢Ï¡ÊèµÄ´ò·Ö¾ØÕó)
-    float mean = 0;                           //mean of all ratings(È«¾ÖµÄÆ½¾ùÖµ)
+    vector<float> mi(ITEM_NUM+1,0.0);         //store the mean rate of every item(ç”¨æ¥å­˜å‚¨æ¯ä¸ªitemçš„å¹³å‡æ‰“åˆ†)
+    float w[ITEM_NUM+1][ITEM_NUM+1] = {0};    //item-item similarity matrix(item-itemç›¸ä¼¼çŸ©é˜µ)
+    map<int,short> rateMatrix[ITEM_NUM+1];    //use a map to store the sparse rate matrix(ä½¿ç”¨ä¸€ä¸ªmapæ•°ç»„å­˜å‚¨ç¨€ç–çš„æ‰“åˆ†çŸ©é˜µ)
+    float mean = 0;                           //mean of all ratings(å…¨å±€çš„å¹³å‡å€¼)
     
     //function declaration    
     float getKmax(vector<float>& array, int K);
@@ -58,7 +58,6 @@ namespace knn{
             cout << "can't open  operation failed!\n";
             exit(1);
         }
-        char* separator = "    ";
         int itemI = 0, itemJ = 0;
         float sim = 0.0;
         while(from.getline(rateStr,256)){
@@ -73,7 +72,7 @@ namespace knn{
                 }
                 float kmaxValue = getKmax(simArray,K);
                 to << itemI << '\t' << kmaxValue <<endl;
-                simArray.clear(); //Çå¿Õvector,Îª»ñÈ¡ÏÂÒ»¸öitemµÄk-max similarity×ö×¼±¸    
+                simArray.clear(); //æ¸…ç©ºvector,ä¸ºè·å–ä¸‹ä¸€ä¸ªitemçš„k-max similarityåšå‡†å¤‡    
                 ++itemNum;     
                 if(itemNum %3000 ==0) {
                     cout<<"read item "<<itemNum<<" sucessfully!"<<endl;
@@ -82,13 +81,13 @@ namespace knn{
             }
             if(strTemp.length() < 3)continue;
             int i = 0;
-            pch = strtok (rateStr,separator);
+            pch = strtok (rateStr,RATE_SP);
             while (pch != NULL) {
                 if(0 == i) itemJ = atoi(pch);
                 else if(1 == i) sim = atof(pch);
                 else if(i > 1) break;
                 ++i;
-                pch = strtok (NULL,separator);
+                pch = strtok (NULL,RATE_SP);
             }
             if(0 == itemI || 0 == itemJ) {
                 cout<<strTemp<<"#####################"<<endl;
@@ -101,7 +100,7 @@ namespace knn{
         cout<<"successfully exit!"<<endl;
     }
     
-    //ÏÂÃæµÄÕâ¸öº¯ÊıÓÃÀ´ÀûÓÃ×îĞ¡¶ÑÕÒ³öµÚk´óµÄÏàËÆ¶È
+    //ä¸‹é¢çš„è¿™ä¸ªå‡½æ•°ç”¨æ¥åˆ©ç”¨æœ€å°å †æ‰¾å‡ºç¬¬kå¤§çš„ç›¸ä¼¼åº¦
     //get the k-max largest similarity in the array  using the minimum heap
     float getKmax(vector<float>& array, int K)
     {
