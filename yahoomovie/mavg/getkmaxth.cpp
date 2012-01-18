@@ -27,6 +27,7 @@
 #define RATE_SP " "  //rate Separator
 #define USER_NUM 943 //10K:943 1M:6040
 #define ITEM_NUM 1682 //10K:1682 1M:3900
+#define SIM_FILE "avg.sim"
 
 /*
   #define TRAINING_SET "../dataset/netflix/data_without_prob.txt"
@@ -51,8 +52,8 @@ namespace knn{
         char* pch;    
         vector<float> simArray;
         int itemNum = 0;
-        string dst = string(source) + "_kmax";
-        std::ifstream from(source);
+        string dst = string(SIM_FILE) + "_kmax";
+        std::ifstream from(SIM_FILE);
         ofstream to(dst.c_str());
         if (!from.is_open()) {
             cout << "can't open  operation failed!\n";
@@ -96,7 +97,7 @@ namespace knn{
             simArray.push_back(sim);
         }
         from.close();
-        cout<<"end load training rate!"<<endl;
+        cout<<"end load similarity!"<<endl;
         cout<<"successfully exit!"<<endl;
     }
     
@@ -107,19 +108,18 @@ namespace knn{
         int arraySize = array.size();
         if(arraySize < K)return 0.0; //if size < K, then the k-max value is 0
         vector<float> heapTmp;
-        for(int i=0; i < array.size(); ++i)
-            {
-                heapTmp.push_back(array[i]);
-                if(i == K-1) {
-                    make_heap(heapTmp.begin(),heapTmp.end(),cmp);
-                }
-                else if(i >=K) {
-                    push_heap(heapTmp.begin(),heapTmp.end(),cmp);
-                    pop_heap(heapTmp.begin(),heapTmp.end(),cmp);
-                    heapTmp.pop_back();
-                }
-                //cout << i<<'\t'<<heapTmp.size()<<endl;
+        for(int i=0; i < array.size(); ++i) {
+            heapTmp.push_back(array[i]);
+            if(i == K-1) {
+                make_heap(heapTmp.begin(),heapTmp.end(),cmp);
             }
+            else if(i >=K) {
+                push_heap(heapTmp.begin(),heapTmp.end(),cmp);
+                pop_heap(heapTmp.begin(),heapTmp.end(),cmp);
+                heapTmp.pop_back();
+            }
+            //cout << i<<'\t'<<heapTmp.size()<<endl;
+        }
         return heapTmp.front();
     }
     
