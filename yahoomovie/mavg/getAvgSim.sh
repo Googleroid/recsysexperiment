@@ -4,11 +4,31 @@
 #(2)compute the avg of the sim, and then output
 
 awk '
-{
-    if(1==ARGIND) {
-        print $0;
+FILENAME==ARGV[1]{
+    if (NF > 1) {
+        record[FNR] = $2;
     }
-    else if(2==ARGIN) {
-        print $0;
+}
+FILENAME==ARGV[2]{
+    if (NF >1) {
+        record[FNR] +=$2;
     }
-}' 1.sim 2.sim 3.sim 4.sim 5.sim
+}
+FILENAME==ARGV[3]{
+    if (NF >1) {
+        record[FNR] +=$2;
+    }
+}
+FILENAME==ARGV[4]{
+    if (NF >1) {
+        record[FNR] +=$2;
+    }
+}
+FILENAME==ARGV[5]{
+    if (NF >1) {
+        record[FNR] +=$2;
+        printf "%d %.6f\n",($1,record[FNR]/5);
+    }
+    print $0;
+}
+' 1.sim 2.sim 3.sim 4.sim 5.sim > avg.sim
