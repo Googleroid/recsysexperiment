@@ -27,7 +27,7 @@
 #define RATE_SP " "  //rate Separator
 #define USER_NUM 943 //10K:943 1M:6040
 #define ITEM_NUM 1682 //10K:1682 1M:3900
-#define SIM_FILE "avg.sim"
+#define SIM_FILE "min.sim"
 
 /*
   #define TRAINING_SET "../dataset/netflix/data_without_prob.txt"
