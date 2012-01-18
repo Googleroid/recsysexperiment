@@ -17,14 +17,17 @@
  */
  
 #include "../commonHeader.h"
-#include "../common.cpp"
-#include "../mlBase.cpp"
 #define USER_NUM 943 //10K:943 1M:6040
 #define ITEM_NUM 1682 //10K:1682 1M:3900
-#define K_NUM  50     //dimension
-#define TRAINING_SET "../dataset/movielens/u1.test" //training set
-#define PROBE_SET "../dataset/movielens/u1.base"  //test set
-#define RATE_SP "	"  //rate Separator
+#define CRI_NUM 5 //the number of criteria
+#define MIN_RATE 1  //min of the rate
+#define MAX_RATE 13 //max of the rate
+#define K_NUM 100   // the dimension 
+#include "./common.cpp"
+#include "./yahooBase.cpp"
+#define TRAINING_SET "../tmpData/training.txt" //training set
+#define PROBE_SET "../tmpData/test.txt" //test set
+#define RATE_SP " "  //rate Separator
 #include "./knnBase.cpp"
 
 int main(int argc, char ** argv)

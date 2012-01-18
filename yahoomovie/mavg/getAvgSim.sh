@@ -27,8 +27,10 @@ FILENAME==ARGV[4]{
 FILENAME==ARGV[5]{
     if (NF >1) {
         record[FNR] +=$2;
-        printf "%d %.6f\n",($1,record[FNR]/5);
+        printf ("%d %.6f\n", $1, record[FNR]/5);
     }
-    print $0;
+    else {
+        print $0;
+    }
 }
 ' 1.sim 2.sim 3.sim 4.sim 5.sim > avg.sim

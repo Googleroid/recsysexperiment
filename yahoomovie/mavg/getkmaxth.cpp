@@ -141,7 +141,7 @@ int main(int argc, char ** argv)
     start = time(NULL);
     timeStartInfo = localtime(&start);
     string timeStartStr = asctime(timeStartInfo);
-    knn::getKMaxSim(300);
+    knn::getKMaxSim(100);
     end = time(NULL);
     duration = (end-start);
     timeEndInfo = localtime(&end);
