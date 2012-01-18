@@ -155,10 +155,11 @@ namespace gNbrHim{
                     for (i=0; i < RuNum; ++i) {// process every item rated by user u(循环处理u打分过的每一个item)
                         int itemI = rateMatrix[u][c][i].item;
                         short ruic = rateMatrix[u][c][i].rate; //real rate
-                        if(-1 == ruic)continue; //has no rate ,can't correct the parameter!! 
+                        if (-1 == ruic) {
+                            continue; //has no rate ,can't correct the parameter!! 
+                        }
                         //pui = predictRate(u,itemI,mean,bu,bi,p[u],q[itemI],dim);
                         puic = predictRate(u,itemI,c);
-                    
                         float euic = ruic - puic;
                     
                         if (isnan(euic)) {// fabs(eui) >= 4.2 || 
@@ -221,7 +222,7 @@ float predictRate(int user, int item, int cri)
     for (int i = 0; i < vSize; ++i) {
         int itemId = rateMatrix[user][cri][i].item;
         int rujc = rateMatrix[user][cri][i].rate;
-        if (-1 == rujc) continue;
+        if (-1 == rujc) continue; //only test the known rates
         double bujc = mean+ bu[user] + bc[cri] + bi[itemId];
         sumw += (rujc-bujc) * wMatrix[item][itemId][cri];
         sumc += cMatrix[item][itemId][cri];
