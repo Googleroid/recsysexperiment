@@ -121,7 +121,7 @@ namespace gNbrHim{
     }
     
     void model(int dim, float  alpha1, float alpha2, float beta1, float beta2,
-               int maxStep=60,double slowRate=1,bool isUpdateBias=true)
+               int maxStep=60,double slowRate=1,bool isUpdateBias=true, char* rmseRetFile="mGNbrModel.ret", float ratio=0.1)
     {
         cout << "begin initialization: " << endl;
         loadRating(TRAINING_SET, rateMatrix, RATE_SP);  //load training set
@@ -140,6 +140,8 @@ namespace gNbrHim{
                                           //use to record the previous rmse of test set and make as the terminal condition
                                           //if the rmse of test begin to increase, then break
         double nowRmse = 0.0;
+        double preProbeRmse = 10000000000.0;
+        double nowProbeRmse = 0.0;
         cout <<"begin testRMSEProbe(): " << endl;
         RMSEProbe(probeRow,K_NUM);
         //main loop
@@ -187,13 +189,22 @@ namespace gNbrHim{
                 } 
             }
             nowRmse =  sqrt( rmse / n);
-            
+           
+            /*
             if( nowRmse >= preRmse && step >= 3) break; //if the rmse of test set begin to increase, then break
             else
                 preRmse = nowRmse;
             cout << step << "\t" << nowRmse <<'\t'<< preRmse<<"     n:"<<n<<endl;
-            RMSEProbe(probeRow,K_NUM);  // check rmse of test set 
-            
+            */
+            nowProbeRmse = RMSEProbe(probeRow,K_NUM);  // check rmse of test set 
+            if (nowProbeRmse > preProbeRmse) {
+                std::ofstream out(rmseRetFile, ios_base::app);
+                out << ratio << '\t' << preProbeRmse << endl;
+                out.close();
+                break;
+            }
+            else preProbeRmse = nowProbeRmse;
+
             alpha1 *= slowRate;    //gradually reduce the learning rate(逐步减小学习速率)
             alpha2 *= slowRate;
         }

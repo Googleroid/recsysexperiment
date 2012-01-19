@@ -36,6 +36,22 @@ int main(int argc, char ** argv)
     float alpha2 = 0.01;  //0.0045according to the paper of "a guide to SVD for CF"
     float beta1 = 0.5;   //0.015 according to the paper of "a guide to SVD for CF"
     float beta2 = 0.5;   //according my own experiment,beta=0.05 is very good ,the RMSE of movielens(1M) test 
+    float ratio;
+    char* rmseRetFile;
+    if (argc > 1) {
+        rmseRetFile = argv[1]; 
+    }
+    else {
+        rmseRetFile = "mavgmodel.ret";
+    }
+    if (argc > 2) {
+        ratio = atof(argv[2]); 
+    }
+    else {
+        ratio = 0.1;
+    }
+
+
     //can reach 0.868692  at step=44
     
     //for(int i=0; i < 10; i++)
@@ -44,7 +60,7 @@ int main(int argc, char ** argv)
         //cout << alpha << endl;
         //void model(int dim, float  alpha1, float alpha2, float beta1, float beta2,
         // int maxStep=60,double slowRate=1,bool isUpdateBias=true)
-        gNbrHim::model(K_NUM,alpha1,alpha2,beta1,beta2,160,0.91,true);
+        gNbrHim::model(K_NUM,alpha1,alpha2,beta1,beta2,160,0.91,true, rmseRetFile, ratio);
     }
     end = time(NULL);
     duration = (end-start);
