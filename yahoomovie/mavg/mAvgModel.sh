@@ -12,9 +12,10 @@ while :;  do
     ((++count))
     ((count==10))&&break
     ratio=0$ratio
-    echo "The ratio is: "$ratio
+    #ratio=0.9
+    echo "The ratio of testSet is: "$ratio
     cd /home/users/lvhongliang/recsysexperiment/yahoomovie
-    ./splitRatings $ratio #split the ratings
+    ./splitRatings.sh ../yahooMovie/yahooMovie.data  $ratio #split the ratings
     echo "split Ratings ok!"
 
     #get the similarity of every single criteria
@@ -22,7 +23,8 @@ while :;  do
     cd /home/users/lvhongliang/recsysexperiment/yahoomovie/mavg
     for i in `seq 5`;do
         echo "compute the similarity of "$i":"
-        ./getSim $i
+        ./getSim $i #the output of the similarity is "movielens"
+        cp movielens $i".sim"
     done
 
     #get average of all the sims
@@ -30,12 +32,12 @@ while :;  do
     echo "get the average of all the sim ok!"
 
     #get the k-max of each item
-    getkmaxth "avg.sim" #output avg.sim_kmax
+    ./getkmaxth "avg.sim" #output avg.sim_kmax
     echo "get the k-maxth sim of each item ok!"
 
     #copy the avg.sim and avg.sim_kmax to /home/users/lvhongliang/recsyscode/knn
     cp avg.sim /home/users/lvhongliang/recsyscode/knn/movielens
-    cp avg.sim /home/users/lvhongliang/recsyscode/knn/movielens_kmax
+    cp avg.sim_kmax /home/users/lvhongliang/recsyscode/knn/movielens_kmax
 
     #prepare the traing set and test set for knn model
     ./transferDataFormat.sh "../tmpData/training.txt" > /home/users/lvhongliang/recsyscode/dataset/movielens/u1.base
@@ -44,6 +46,5 @@ while :;  do
 
     #output the RMSE to file mavgmodel.ret
     cd /home/users/lvhongliang/recsyscode/knn
-    ./knn mavgmodel.ret 
-    exit(0)
+    ./knn "mavgmodel.ret" $ratio
 done
