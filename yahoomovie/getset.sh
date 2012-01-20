@@ -1,5 +1,4 @@
 #!/bin/bash
-rm temp
 if [ -f temp ];
 then
     rm temp
