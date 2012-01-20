@@ -17,6 +17,6 @@ while :;  do
     echo "split Ratings ok!"
 
     #output the RMSE to file mavgmodel.ret
-    cd /home/users/lvhongliang/recsyscode/knn
+    cd -
     ./mGNbrModel "mGNbrmodel.ret" $ratio
 done

@@ -1,8 +1,6 @@
 #!/bin/bash
 
-#this file use to get a serial result of mAvg model(the average pearson similariy)
-#1.split the file
-
+#this file use to get a serial result of mMin model(the min pearson similariy)
 
 ratio=0.0
 count=0
@@ -27,17 +25,17 @@ while :;  do
         cp movielens $i".sim"
     done
 
-    #get average of all the sims
-    ./getAvgSim.sh #output the avg.sim
+    #get minimum of all the sims
+    ./getMinSim.sh #output the avg.sim
     echo "get the average of all the sim ok!"
 
     #get the k-max of each item
-    ./getkmaxth "avg.sim" #output avg.sim_kmax
+    ./getkmaxth "min.sim" #output avg.sim_kmax
     echo "get the k-maxth sim of each item ok!"
 
     #copy the avg.sim and avg.sim_kmax to /home/users/lvhongliang/recsyscode/knn
-    cp avg.sim /home/users/lvhongliang/recsyscode/knn/movielens
-    cp avg.sim_kmax /home/users/lvhongliang/recsyscode/knn/movielens_kmax
+    cp min.sim /home/users/lvhongliang/recsyscode/knn/movielens
+    cp min.sim_kmax /home/users/lvhongliang/recsyscode/knn/movielens_kmax
 
     #prepare the traing set and test set for knn model
     ./transferDataFormat.sh "../tmpData/training.txt" > "/home/users/lvhongliang/recsyscode/dataset/movielens/u1.base"
@@ -46,5 +44,5 @@ while :;  do
 
     #output the RMSE to file mavgmodel.ret
     cd /home/users/lvhongliang/recsyscode/knn
-    ./knn "mavgmodel.ret" $ratio
+    ./knn "mminmodel.ret" $ratio
 done

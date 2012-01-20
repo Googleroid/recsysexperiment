@@ -208,7 +208,8 @@ namespace gNbrHim{
             alpha1 *= slowRate;    //gradually reduce the learning rate(逐步减小学习速率)
             alpha2 *= slowRate;
         }
-        RMSEProbe(probeRow,K_NUM);  //  check rmse of test set 
+        //ouput the predict result
+        RMSEProbe(probeRow,K_NUM, "predictRet.txt");  //  check rmse of test set 
         return;
     }
 };

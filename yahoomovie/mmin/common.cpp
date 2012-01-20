@@ -108,32 +108,20 @@ void loadArray(float a[],char* fileName,int length)
 }
 
 //compute the rmse of test set
-double RMSEProbe(vector<testSetNode>& probeSet,int dim, char* outputFile="")
+double RMSEProbe(vector<testSetNode>& probeSet,int dim)
 {
     int probeSize = probeSet.size();
     float pRate,err;
     long double rmse = 0;
-    bool isOutput = false;
-    std::ofstream out;
-    if (outputFile != "") {
-        isOutput = true;
-        out.open(outputFile);
-    }
     
     for(int i = 0; i < probeSize; ++i) {
         pRate = predictRate(probeSet[i].user,probeSet[i].item,probeSet[i].cri);      //predict rate
         //cout<<pRate<<"    "<<probeSet[i].rate<<"    "<<probeSet[i].user<<"    "<<probeSet[i].item<<endl;
         err = pRate-probeSet[i].rate;
         rmse += err*err;
-        if (isOutput) {
-            out << probeSet[i].user << " " << probeSet[i].item << " " << probeSet[i].cri << " " << probeSet[i].rate << " " << pRate << endl;
-        }
     }
     rmse = sqrt( rmse / probeSize);
     cout<<"RMSE:"<<rmse<<" probeNum:"<<probeSize<<endl;
-    if (isOutput) {
-        out.close();
-    }
     return rmse;
 }
 
