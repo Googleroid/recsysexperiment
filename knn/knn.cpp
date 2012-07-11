@@ -11,15 +11,15 @@
 * Foundation; either version 1, or (at your option) any later version.
 */
 /**
- * ±¾³ÌĞòµÄÄ¿µÄÊÇ²âÊÔ×î¾­µäµÄËã·¨ knn£¬µ«ÊÇ×îÖ÷ÒªµÄÊÂÇé»¹ÊÇÍê³Épre-computation£¬ÊÂÏÈ¼ÆËã³ö
- ¡Á item-itemµÄÏàËÆ¶È
- ¡Á ¼ÆËã²½Öè£º
- * £¨1£©Ô¤´¦ÀíµÄ·½Ê½£¬¼ÆËãÃ¿¸öitemµÄÆ½¾ù´ò·Ö£¬´æÔÚmeanÊı×éÖĞ
-   £¨2£©Ñ­»·i£¬j£¬Õë¶ÔÃ¿Ò»¸öij¼ÆËãÏàËÆ¶È
-   £¨3£©¶ÔÓÚÃ¿Ò»¸öiºÍj£¬ÕÒ³ö¶ÔËûÃÇ¹²Í¬´ò·ÖµÄuserlist£¬·ÅÈëÒ»¸ösetÖĞ
-   £¨4£©Ó¦ÓÃ¹«Ê½Recommender system handbookµÄP125Ò³¹«Ê½4.21¿ÉÒÔ¼ÆËã³öÏàËÆ¶È£¬´æ´¢ÔÚ¶şÎ¬Êı×éÖĞ
-   Çó³öÀ´µÄÏàËÆ¶È±ØÈ»Ó¦¸ÃÊÇ¶Ô³ÆµÄ£¬Èç¹û²»¶Ô³Æ£¬ËµÃ÷½á¹ûÏÔÈ»ÊÇ²»¶ÔµÄ¡£
- ¡Á
+ * æœ¬ç¨‹åºçš„ç›®çš„æ˜¯æµ‹è¯•æœ€ç»å…¸çš„ç®—æ³• knnï¼Œä½†æ˜¯æœ€ä¸»è¦çš„äº‹æƒ…è¿˜æ˜¯å®Œæˆpre-computationï¼Œäº‹å…ˆè®¡ç®—å‡º
+ Ã— item-itemçš„ç›¸ä¼¼åº¦
+ Ã— è®¡ç®—æ­¥éª¤ï¼š
+ * ï¼ˆ1ï¼‰é¢„å¤„ç†çš„æ–¹å¼ï¼Œè®¡ç®—æ¯ä¸ªitemçš„å¹³å‡æ‰“åˆ†ï¼Œå­˜åœ¨meanæ•°ç»„ä¸­
+   ï¼ˆ2ï¼‰å¾ªç¯iï¼Œjï¼Œé’ˆå¯¹æ¯ä¸€ä¸ªijè®¡ç®—ç›¸ä¼¼åº¦
+   ï¼ˆ3ï¼‰å¯¹äºæ¯ä¸€ä¸ªiå’Œjï¼Œæ‰¾å‡ºå¯¹ä»–ä»¬å…±åŒæ‰“åˆ†çš„userlistï¼Œæ”¾å…¥ä¸€ä¸ªsetä¸­
+   ï¼ˆ4ï¼‰åº”ç”¨å…¬å¼Recommender system handbookçš„P125é¡µå…¬å¼4.21å¯ä»¥è®¡ç®—å‡ºç›¸ä¼¼åº¦ï¼Œå­˜å‚¨åœ¨äºŒç»´æ•°ç»„ä¸­
+   æ±‚å‡ºæ¥çš„ç›¸ä¼¼åº¦å¿…ç„¶åº”è¯¥æ˜¯å¯¹ç§°çš„ï¼Œå¦‚æœä¸å¯¹ç§°ï¼Œè¯´æ˜ç»“æœæ˜¾ç„¶æ˜¯ä¸å¯¹çš„ã€‚
+ Ã—
  
       
  */
@@ -27,16 +27,16 @@
 #include "mdefine.cpp"
 
 namespace svd{
-	//Ê¹ÓÃÒ»Ğ©È«¾Ö±äÁ¿£¬´æ´¢ĞèÒª¹À¼ÆµÄ²ÎÊı£¬bu£¬bi,wij
-    vector<double> mi(ITEM_NUM+1,0.0);         //ÓÃÀ´´æ´¢Ã¿¸öitemµÄÆ½¾ù´ò·Ö
-    vector< vector<double> > w(ITEM_NUM+1);  //item-itemÏàËÆ¾ØÕó
-    vector< vector<int> >  userItems(USER_NUM+1);   //ÓÃ»§´ò¹ı·ÖµÄitems-----Êı×é
-    //vector< vector <int> > rateMatrix(USER_NUM+1);  //´ò·Ö¾ØÕó,Õâ¸ö¾ØÕóºÄ·ÑÁË´óÁ¿µÄÄÚ´æ£¬Êµ¼ÊÏµÍ³ÖĞ±ØĞëÓÅ»¯£¬ÈçºÎ
-                                                    //ÓÅ»¯ÄØ£¿£¿£¿£¿£¿£¿---->ÒÑ¾­Í¨¹ıÁËÏÂÃæµÄÒ»¸ömapÊı×é½â¾öÁË
-    map<int,int> rateMatrix[ITEM_NUM+1];           //Ê¹ÓÃÒ»¸ömapÊı×é´æ´¢Ï¡ÊèµÄ´ò·Ö¾ØÕó                     
-	float mean = 0;                         //È«¾ÖµÄÆ½¾ùÖµ
+	//ä½¿ç”¨ä¸€äº›å…¨å±€å˜é‡ï¼Œå­˜å‚¨éœ€è¦ä¼°è®¡çš„å‚æ•°ï¼Œbuï¼Œbi,wij
+    vector<double> mi(ITEM_NUM+1,0.0);         //ç”¨æ¥å­˜å‚¨æ¯ä¸ªitemçš„å¹³å‡æ‰“åˆ†
+    vector< vector<double> > w(ITEM_NUM+1);  //item-itemç›¸ä¼¼çŸ©é˜µ
+    vector< vector<int> >  userItems(USER_NUM+1);   //ç”¨æˆ·æ‰“è¿‡åˆ†çš„items-----æ•°ç»„
+    //vector< vector <int> > rateMatrix(USER_NUM+1);  //æ‰“åˆ†çŸ©é˜µ,è¿™ä¸ªçŸ©é˜µè€—è´¹äº†å¤§é‡çš„å†…å­˜ï¼Œå®é™…ç³»ç»Ÿä¸­å¿…é¡»ä¼˜åŒ–ï¼Œå¦‚ä½•
+                                                    //ä¼˜åŒ–å‘¢ï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿï¼Ÿ---->å·²ç»é€šè¿‡äº†ä¸‹é¢çš„ä¸€ä¸ªmapæ•°ç»„è§£å†³äº†
+    map<int,int> rateMatrix[ITEM_NUM+1];           //ä½¿ç”¨ä¸€ä¸ªmapæ•°ç»„å­˜å‚¨ç¨€ç–çš„æ‰“åˆ†çŸ©é˜µ                     
+	float mean = 0;                         //å…¨å±€çš„å¹³å‡å€¼
     
-    //º¯ÊıÉùÃ÷
+    //å‡½æ•°å£°æ˜
     void RMSEProbe(void);
     void ratingAll(vector< Rating > & data);
     double rating(Rating  record);
@@ -48,22 +48,22 @@ namespace svd{
         vector<Rating> data;
         cout << "begin initialization: " << endl;
         
-        loadRating("../mldataset/u1.base",data,rateMatrix);  //³õÊ¼»¯£¬½«´ò·ÖÊı¾İload ÈëdataÖĞ
+        loadRating("../mldataset/u1.base",data,rateMatrix);  //åˆå§‹åŒ–ï¼Œå°†æ‰“åˆ†æ•°æ®load å…¥dataä¸­
        
-        mean = setMeanRating(data); //ÇóÆ½¾ùÖµ£¬ÇóbuºÍbiµÄÖµ
+        mean = setMeanRating(data); //æ±‚å¹³å‡å€¼ï¼Œæ±‚buå’Œbiçš„å€¼
         
         int i,u,j,k;
         
-        //³õÊ¼»¯w
+        //åˆå§‹åŒ–w
         for(int i = 1; i < ITEM_NUM+1; ++i){
-            w[i].clear();            //Çå¿ÕËùÓĞµÄp[i]
+            w[i].clear();            //æ¸…ç©ºæ‰€æœ‰çš„p[i]
             for(j = 1; j < ITEM_NUM+1; ++j) {
         		w[i].push_back(0);
         	}
         }
         
-        //Çómi£¬¼´Ã¿¸öitemµÄÆ½¾ù´ò·Ö
-        for(i = 1; i < ITEM_NUM+1; ++i){  //ÀûÓÃÃ¿Ò»¸ö´ò·Öµ÷ÓÅ½á¹û
+        //æ±‚miï¼Œå³æ¯ä¸ªitemçš„å¹³å‡æ‰“åˆ†
+        for(i = 1; i < ITEM_NUM+1; ++i){  //åˆ©ç”¨æ¯ä¸€ä¸ªæ‰“åˆ†è°ƒä¼˜ç»“æœ
         	map <int,int> ::iterator it = rateMatrix[i].begin(); 
         	//if(rateMatrix[i].size() < 1) continue;
         	map <int,int> ::iterator end = rateMatrix[i].end();
@@ -76,9 +76,9 @@ namespace svd{
         	//cout <<i<<'\t'<< mi[i]<<endl;//<<rateMatrix[i].size()
         } 
 		
-        //Ñ­»·Ã¿¸öitem £¬ÇóËüÃÇµÄÏàËÆ¶È
+        //å¾ªç¯æ¯ä¸ªitem ï¼Œæ±‚å®ƒä»¬çš„ç›¸ä¼¼åº¦
         
-       	for(i = 1; i < ITEM_NUM+1; ++i){  //ÀûÓÃÃ¿Ò»¸ö´ò·Öµ÷ÓÅ½á¹û
+       	for(i = 1; i < ITEM_NUM+1; ++i){  //åˆ©ç”¨æ¯ä¸€ä¸ªæ‰“åˆ†è°ƒä¼˜ç»“æœ
         	//cout<<i<<':'<<'\t';
         	for(j = i; j < ITEM_NUM+1; ++j) {
         		w[i][j] = getSim(i,j);
@@ -88,7 +88,7 @@ namespace svd{
         	//cout <<i<< "  over!"<<endl;
         }
         
-        //Êä³öwµÄÖµ
+        //è¾“å‡ºwçš„å€¼
         ofstream outputw("sim.txt");
 	    for(i=1; i < ITEM_NUM+1; ++i)
 	    {
@@ -101,7 +101,7 @@ namespace svd{
     }
     
     double getSim(int item1, int item2) {
-    	//(1)ÕÒµ½´ò·ÖµÄ¹«¹²ÓÃ»§¼¯ºÏ£¨2£©°´ÕÕ¹«Ê½¼ÆËã
+    	//(1)æ‰¾åˆ°æ‰“åˆ†çš„å…¬å…±ç”¨æˆ·é›†åˆï¼ˆ2ï¼‰æŒ‰ç…§å…¬å¼è®¡ç®—
     	if(item1 == item2)return 1.0;
     	if(0 == rateMatrix[item1].size() || 0 == rateMatrix[item2].size() ) return 0.0;
     	map <int,int> ::iterator it = rateMatrix[item1].begin(); 
@@ -111,7 +111,7 @@ namespace svd{
     		int user = (*it).first;
     		if(rateMatrix[item2].find(user) != rateMatrix[item2].end()) {
     			//cout<<"common user:"<<user<<'\t'<<rateMatrix[item1][user]<<'\t'<<rateMatrix[item2][user]<<endl;
-    			//ÒÑ¾­ÕÒµ½ÁË¹«¹²ÔªËØ
+    			//å·²ç»æ‰¾åˆ°äº†å…¬å…±å…ƒç´ 
     			sum1 += (rateMatrix[item1][user] - mi[item1]) *(rateMatrix[item2][user] - mi[item2]);
     			sumSquare1 += pow(rateMatrix[item1][user] - mi[item1],2); 
     			sumSquare2 += pow(rateMatrix[item2][user] - mi[item2],2);
@@ -124,7 +124,7 @@ namespace svd{
     
     
     
-    //¸ù¾İsvd++¹«Ê½Ô¤²â´ò·ÖÖµ
+    //æ ¹æ®svd++å…¬å¼é¢„æµ‹æ‰“åˆ†å€¼
     double rating(Rating  record){
         /*
         int user = record.user;
@@ -145,13 +145,13 @@ namespace svd{
     	double sumBias = 0.0;
     	for(int j=0; j < userItems[u].size(); ++j) {
     		double buj = mean + bu[u] + bi[userItems[u][j]];
-    		double ruj = rateMatrix[u][userItems[u][j]];// u ¶Ô jµÄ´ò·ÖÈçºÎ¿ìËÙ»ñµÃÄØ£¿
+    		double ruj = rateMatrix[u][userItems[u][j]];// u å¯¹ jçš„æ‰“åˆ†å¦‚ä½•å¿«é€Ÿè·å¾—å‘¢ï¼Ÿ
     		sumBias += (ruj - buj) * w[i][userItems[u][j]] + c[i][userItems[u][j]];
     	}
     	double ret = 0.0;
     	if(userItems[u].size()>1)
     	{
-    		ret = mean + bu[u] + bi[i] + (1.0/sqrt(userItems[u].size())) * sumBias;//ÕâÀïÏÈ²»¶Ôk½øĞĞ±ä»¯£¬ÏÈÈ¡k=ÎŞÇî´ó
+    		ret = mean + bu[u] + bi[i] + (1.0/sqrt(userItems[u].size())) * sumBias;//è¿™é‡Œå…ˆä¸å¯¹kè¿›è¡Œå˜åŒ–ï¼Œå…ˆå–k=æ— ç©·å¤§
     	}
     	else ret  = mean;
     	if(ret < 1.0) ret = 1;
@@ -161,12 +161,12 @@ namespace svd{
         */
     }
     
-    //¼ì²é²âÊÔ¼¯Çé¿ö
+    //æ£€æŸ¥æµ‹è¯•é›†æƒ…å†µ
     void RMSEProbe(void){
     	
-        /*	1¡¢load testÊı¾İ¼¯£¬
-        	2¡¢Õë¶ÔÃ¿Ò»ÌõÊı¾İ£¬¼ÆËãÔ¤²âÖµ£¬È»ºó¼ÆËãÎó²îµÄÆ½·½ºÍ£¬¼ÆËã×ÜÊıÁ¿
-        	3¡¢Êä³örmse
+        /*	1ã€load testæ•°æ®é›†ï¼Œ
+        	2ã€é’ˆå¯¹æ¯ä¸€æ¡æ•°æ®ï¼Œè®¡ç®—é¢„æµ‹å€¼ï¼Œç„¶åè®¡ç®—è¯¯å·®çš„å¹³æ–¹å’Œï¼Œè®¡ç®—æ€»æ•°é‡
+        	3ã€è¾“å‡ºrmse
         */
         std::ifstream from("../mldataset/u1.test");
         char rateStr[100];
@@ -199,8 +199,8 @@ int main(int argc, char ** argv)
 {
 	double start,end,duration; 
 	start = clock();
-    double alpha = 0.013;  //¾­²âÊÔÕâ¸öÖµ±È½ÏºÃ
-    double beta = 0.001;   //¾­¹ı²âÊÔÕâ¸öÒ²»¹ĞĞ
+    double alpha = 0.013;  //ç»æµ‹è¯•è¿™ä¸ªå€¼æ¯”è¾ƒå¥½
+    double beta = 0.001;   //ç»è¿‡æµ‹è¯•è¿™ä¸ªä¹Ÿè¿˜è¡Œ
     int dim = 100;//atoi(argv[1]);
     test_level = 1;//atoi(argv[2]);
     ofstream outputfile("parameter.txt");
